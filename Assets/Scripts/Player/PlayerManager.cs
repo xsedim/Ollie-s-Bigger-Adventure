@@ -39,6 +39,7 @@ namespace Circle
         private void OnEnable()
         {
             InputHandler.Inputs.Player.Enable();
+            InputHandler.Inputs.Player.ToggleGravity.Disable();
             onHit += HitResponse;
 
             health = defaultHealth;
@@ -75,7 +76,7 @@ namespace Circle
 
         private IEnumerator Death()
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(3);
 
             // Reload scene
             SceneManager.LoadScene(0);

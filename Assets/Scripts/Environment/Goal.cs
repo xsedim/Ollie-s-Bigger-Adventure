@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Utilities.Core;
 
 namespace Circle
 {
@@ -11,7 +12,8 @@ namespace Circle
         {
             if (other.CompareTag("Player"))
             {
-                SceneManager.LoadScene(1);
+                var nextSceneIndex = (SceneManager.GetActiveScene().buildIndex + 1) % SceneManager.sceneCountInBuildSettings;
+                StartCoroutine(SceneTools.TransitionToNextScene());
             }
         }
     }

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <title>Unity WebGL Player | {{{ PRODUCT_NAME }}}</title>
+  <style>
+    /* Reset margins and paddings for the entire page */
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden; /* Prevent scrollbars */
+      width: 100vw;
+      height: 100vh;
+      background: black; /* Black background for letterboxing/pillarboxing */
+    }
+
+    /* Loading Screen Styling */
+    #loading-screen {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #9dd9b6; /* Soft pastel green */
+      color: #ffffff;
+      font-family: 'Comic Sans MS', 'Arial', sans-serif;
+      z-index: 9999;
+    }
+    #loading-bar {
+      width: 60%;
+      height: 30px;
+      border: 2px solid #ffffff;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 20px;
+    }
+    #loading-progress {
+      height: 100%;
+      width: 0%;
+      background: #4caf50;
+      transition: width 0.3s ease;
+    }
+    #start-button {
+      margin-top: 20px;
+      padding: 15px 30px;
+      background: #4caf50;
+      border: none;
+      border-radius: 10px;
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #start-button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+
+    /* Unity Container Styling */
+    #unity-container {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: black; /* Black background for letterboxing/pillarboxing */
+    }
+    canvas {
+      display: block;
+      background: #231F20;
+    }
+  </style>
+</head>
+
+<body>
+<!-- Loading screen with progress bar -->
+<div id="loading-screen">
+  <h1>Loading Game...</h1>
+  <div id="loading-bar">
+    <div id="loading-progress"></div>
+  </div>
+  <button id="start-button" disabled>Start Game</button>
+</div>
+
+<!-- Unity WebGL container (hidden until game starts) -->
+<div id="unity-container" class="unity-desktop">
+  <canvas id="unity-canvas" width={{{ WIDTH }}} height={{{ HEIGHT }}} tabindex="-1"></canvas>
+</div>
+
+<script src="Build/{{{ LOADER_FILENAME }}}"></script>
+
+<script>
+  var container = document.querySelector("#unity-container");
+  var canvas = document.querySelector("#unity-canvas");
+  var loadingScreen = document.querySelector("#loading-screen");
+  var progressBar = document.querySelector("#loading-progress");
+  var startButton = document.querySelector("#start-button");
+
+  const cacheBuster = `?v=${Date.now()}`;
+
+  var config = {
+    dataUrl: `Build/{{{ DATA_FILENAME }}}${cacheBuster}`,
+    frameworkUrl: `Build/{{{ FRAMEWORK_FILENAME }}}${cacheBuster}`,
+    #if USE_THREADS
+    workerUrl: `Build/{{{ WORKER_FILENAME }}}${cacheBuster}`,
+    #endif
+    #if USE_WASM
+    codeUrl: `Build/{{{ CODE_FILENAME }}}${cacheBuster}`,
+    #endif
+    #if MEMORY_FILENAME
+    memoryUrl: `Build/{{{ MEMORY_FILENAME }}}${cacheBuster}`,
+    #endif
+    #if SYMBOLS_FILENAME
+    symbolsUrl: `Build/{{{ SYMBOLS_FILENAME }}}${cacheBuster}`,
+    #endif
+    streamingAssetsUrl: "StreamingAssets",
+    companyName: {{{ JSON.stringify(COMPANY_NAME) }}},
+  productName: {{{ JSON.stringify(PRODUCT_NAME) }}},
+  productVersion: {{{ JSON.stringify(PRODUCT_VERSION) }}},
+  backgroundColor: "transparent"};
+
+  // Mobile responsiveness
+  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    const meta = document.createElement('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+    document.getElementsByTagName('head')[0].appendChild(meta);
+  }
+
+// Unity loading process
+  createUnityInstance(canvas, config, (progress) => {
+      progressBar.style.width = (100 * progress) + "%";
+    })
+      .then((unityInstance) => {
+        console.log("Unity loaded successfully");
+        startButton.disabled = false;
+        // Start button click: Hide loading screen, show Unity, go fullscreen
+        startButton.addEventListener("click", () => {
+          loadingScreen.style.display = "none";
+          container.style.display = "block";
+          resizeCanvas(); // Resize canvas on start
+        });
+      }).catch((message) => {
+        console.error("Unity failed to load: " + message);
+        alert("Failed to load the game. Please try again.");
+      });
+
+  // Resize the canvas to maintain aspect ratio and center it
+  function resizeCanvas() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    const gameAspect = {{{ WIDTH }}} / {{{ HEIGHT }}}; // Replace with your game's aspect ratio
+    const windowAspect = windowWidth / windowHeight;
+
+    let newWidth, newHeight;
+
+    if (windowAspect < gameAspect) {
+      // Window is taller than the game aspect ratio
+      newWidth = windowWidth;
+      newHeight = windowWidth / gameAspect;
+    } else {
+      // Window is wider than the game aspect ratio
+      newWidth = windowHeight * gameAspect;
+      newHeight = windowHeight;
+    }
+
+    canvas.style.width = `${newWidth}px`;
+    canvas.style.height = `${newHeight}px`;
+
+    container.style.width = `${newWidth}px`;
+    container.style.height = `${newHeight}px`;
+  }
+
+  // Listen for window resize events
+  window.addEventListener("resize", resizeCanvas);
+</script>
+</body>
+</html>

@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 namespace Circle
 {
@@ -13,9 +14,7 @@ namespace Circle
         private Image fill;
         private InputAction holdAction;
 
-        [SerializeField] private int sceneToLoad = 0;
-
-        [SerializeField] private UnityEvent onFilled;
+        private Coroutine routine;
 
         private void Awake()
         {
@@ -29,7 +28,6 @@ namespace Circle
 
             holdAction.started += StartTimer;
             holdAction.canceled += CancelTimer;
-            onFilled.AddListener(SetScene);
         }
 
         private void OnDisable()
@@ -38,18 +36,17 @@ namespace Circle
 
             holdAction.started -= StartTimer;
             holdAction.canceled -= CancelTimer;
-            onFilled.RemoveListener(SetScene);
         }
 
         private void StartTimer(InputAction.CallbackContext context)
         {
             var interaction = context.interaction as HoldInteraction;
-            StartCoroutine(FillBar(interaction.duration));
+            routine = StartCoroutine(FillBar(interaction.duration));
         }
 
         private void CancelTimer(InputAction.CallbackContext context)
         {
-            StopAllCoroutines();
+            if (routine != null) StopCoroutine(routine);
             fill.fillAmount = 0;
         }
 
@@ -70,13 +67,6 @@ namespace Circle
             }
 
             fill.fillAmount = 1;
-
-            onFilled?.Invoke();
-        }
-
-        private void SetScene()
-        {
-            SceneManager.LoadScene(sceneToLoad);
         }
     }
 }
