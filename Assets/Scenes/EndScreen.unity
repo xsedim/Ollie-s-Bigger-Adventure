@@ -163,12 +163,14 @@ VideoPlayer:
   m_TimeUpdateMode: 2
   m_PlaybackSpeed: 1
   m_AudioOutputMode: 2
-  m_TargetAudioSources: []
-  m_DirectAudioVolumes: []
-  m_Url: 
-  m_EnabledAudioTracks: 
-  m_DirectAudioMutes: 
-  m_ControlledAudioTrackCount: 0
+  m_TargetAudioSources:
+  - {fileID: 0}
+  m_DirectAudioVolumes:
+  - 1
+  m_Url: https://www.asc.ohio-state.edu/gamelab//ProjectCircle/Assets/Planet9_Outro.mp4
+  m_EnabledAudioTracks: 01
+  m_DirectAudioMutes: 00
+  m_ControlledAudioTrackCount: 1
   m_PlayOnAwake: 1
   m_SkipOnDrop: 1
   m_Looping: 0
@@ -199,12 +201,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 360814038}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15969f0a6683483448814d86f697ca15, type: 3}
+  m_Script: {fileID: 11500000, guid: 643da8894afe070439990a0171695e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: 0
-  videoFileName: Outro_Final.mp4
-  videoImg: {fileID: 746844867}
+  videoPlayer: {fileID: 360814039}
 --- !u!1 &614923346
 GameObject:
   m_ObjectHideFlags: 0
