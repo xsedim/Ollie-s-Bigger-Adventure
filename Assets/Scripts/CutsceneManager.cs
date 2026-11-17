@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 using UnityEngine.Video;
 using Utilities.Core;
 
@@ -8,15 +8,17 @@ namespace Circle
     public class CutsceneManager : MonoBehaviour
     {
         [SerializeField] private VideoPlayer videoPlayer;
-
+        
+        private InputAction holdAction;
+        
         private void Start()
         {
-            if (videoPlayer != null)
-            {
-                videoPlayer.loopPointReached += OnVideoEnd;
-                videoPlayer.prepareCompleted += OnVideoPrepared;
-                videoPlayer.Prepare();
-            }
+            videoPlayer.loopPointReached += OnVideoEnd;
+            videoPlayer.prepareCompleted += OnVideoPrepared;
+            videoPlayer.Prepare();
+
+            holdAction = InputHandler.Inputs.UI.Hold;
+            holdAction.performed += _ => OnVideoEnd(videoPlayer);
         }
 
         private void OnVideoPrepared(VideoPlayer vp)
