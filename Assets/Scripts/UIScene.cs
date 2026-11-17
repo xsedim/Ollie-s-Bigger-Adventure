@@ -18,7 +18,8 @@ namespace Circle
         
         [SerializeField] private Button playButton;
         [SerializeField] private Button quitButton;
-
+        [SerializeField] private RectTransform selectIndicator;
+        
         private InputActionMap ui;
         private InputActionMap player;
 
@@ -59,6 +60,7 @@ namespace Circle
         private void Start()
         {
             playButton.Select();
+            selectIndicator.position = playButton.transform.position;
         }
 
         private void PressButton(InputAction.CallbackContext context)
@@ -73,11 +75,13 @@ namespace Circle
         private void SelectPlayButton(InputAction.CallbackContext context)
         {
             playButton.Select();
+            selectIndicator.position = playButton.transform.position;
         }
 
         private void SelectQuitButton(InputAction.CallbackContext context)
         {
             quitButton.Select();
+            selectIndicator.position = quitButton.transform.position;
         }
     }
 }
