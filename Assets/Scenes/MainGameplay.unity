@@ -157163,7 +157163,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6552638923593003234, guid: 7359910a6df59e645bd9bb0d8a238108, type: 3}
       propertyPath: m_Name
-      value: Electricity
+      value: Electricity (2)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -174301,7 +174301,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6552638923593003234, guid: 7359910a6df59e645bd9bb0d8a238108, type: 3}
       propertyPath: m_Name
-      value: Electricity
+      value: Electricity (3)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -181540,7 +181540,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6552638923593003234, guid: 7359910a6df59e645bd9bb0d8a238108, type: 3}
       propertyPath: m_Name
-      value: Electricity
+      value: Electricity (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
